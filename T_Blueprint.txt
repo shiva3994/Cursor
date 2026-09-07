@@ -1,0 +1,40 @@
+Phase 0: Toolchain fluency (done, just reinforce)
+You already have g++, gdb, and Cursor working. 
+Practice ONLY this loop: write a tiny program → g++ file.cpp -o file.exe → .\file.exe → repeat. 
+Do this 10-15 times with trivial programs so the compile/run cycle becomes second nature before anything else matters.
+
+Phase 1: Core syntax (1-2 weeks)
+Variables & types (int, double, char, bool, string), arithmetic, if/else, loops (for, while), 
+functions with parameters/return values. Write 10+ tiny programs: temperature converter, simple calculator, 
+a number guessing game, FizzBuzz. Goal: stop looking things up for basic syntax.
+
+Phase 2: Arrays & strings (1 week)
+Arrays (fixed-size lists) and C-style strings/std::string manipulation. 
+Robotics relevance: sensor readings are almost always stored in arrays 
+(e.g., 8 ultrasonic distance sensors = an array of 8 numbers). Practice: store and average 5 fake 'sensor readings'.
+
+Phase 3: Pointers & references (2-3 weeks)THE C++ topic that doesn't exist in Python. 
+A pointer stores a memory ADDRESS instead of a value. 
+Robotics relevance: hardware registers (motor controllers, sensors) are literally memory addresses you read/write directly.
+Go slow — draw diagrams of memory boxes and arrows if it helps. This is where most beginners get stuck; budget real time here.
+
+Phase 4: Structs & classes (OOP) (2 weeks)
+Structs group related data (e.g., a Motor struct with speed, direction, position). 
+Classes add behavior (functions) to that data — e.g., a Motor class with a spin() function. 
+Robotics relevance: you'll model every physical component (Motor, Sensor, Servo) as a class. 
+Practice: build a simple Robot class with battery_level and a few functions.
+
+Phase 5: Standard Template Library (1-2 weeks)
+vectors (resizable arrays), maps, and common algorithms (sort, find). 
+Robotics relevance: buffering incoming sensor data streams, storing waypoints for navigation. 
+Practice: store a list of GPS-like waypoints in a vector and loop through them.
+
+Phase 6: First hardware — Arduino basics (1-2 weeks)
+Move from pure software to Arduino IDE + a real (or simulated) Arduino board. 
+Arduino C++ is a friendly subset — you'll recognize almost everything from Phases 1-4. 
+Start with: blink an LED, read a button, read an analog sensor (potentiometer as a stand-in for real sensors).
+
+Phase 7: Embedded concepts (2-3 weeks)
+Learn interrupts (reacting instantly to hardware events, 
+e.g., an emergency stop button), timing without blocking (millis() instead of delay()), 
+and PWM (controlling motor speed). These are the real bridges between 'C++ programmer' and 'embedded/robotics engineer'.
