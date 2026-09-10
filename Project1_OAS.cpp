@@ -11,4 +11,14 @@ int main() {
     retutn 0;
 }
 
-//
+// Part B — add a loop that checks each sensor and prints its status 
+// (combines things you already know: loops + if/else + arrays):
+
+for (int i = 0; i < 5; i++) {
+    if (sensor_readings[i] < 10) {
+        std::cout << "Sensor" << i << ": Danger - Obstacle at " << sensor_readings[i] << "cm" << std::endl;
+    } else {
+        std::cout << "Sensor" << i << ": Clear - No Obstacle" << sensor_readings[i] << "cm" << std::endl;
+    }
+}
+
