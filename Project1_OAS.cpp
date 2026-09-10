@@ -2,28 +2,29 @@
 
 // What it does: simulates a robot checking 5 sensors, printing each reading's status,
 // then giving one final decision.
+#include <iostream>                              // needed for std::cout
 
-// Part A — set up the array (you know this):
+int main() {                                     // program starts here
+    int sensor_readings[5] = {12, 8, 15, 3, 20};  // 5 fake sensor distances (cm)
 
-#include <iostream> 
-int main() {
-    int sensor_readings[5] = {12, 8, 15, 3, 20};
-    retutn 0;
-}
+    bool obstacle_found = false;                  // tracks if ANY sensor saw danger; starts false
 
-// Part B — add a loop that checks each sensor and prints its status 
-// (combines things you already know: loops + if/else + arrays):
+    for (int i = 0; i < 5; i++) {                 // check each of the 5 sensors, one by one
+        if (sensor_readings[i] < 10) {            // is this sensor too close? (danger zone)
+            std::cout << "Sensor " << i << ": DANGER - obstacle at " << sensor_readings[i] << "cm" << std::endl;  // report danger
+            obstacle_found = true;                // remember that at least one sensor found danger
+        } else {                                  // otherwise, this sensor is fine
+            std::cout << "Sensor " << i << ": clear - " << sensor_readings[i] << "cm" << std::endl;  // report clear
+        }
+    }                                              // loop ends after checking all 5 sensors
 
-for (int i = 0; i < 5; i++) {
-    if (sensor_readings[i] < 10) {
-        std::cout << "Sensor" << i << ": Danger - Obstacle at " << sensor_readings[i] << "cm" << std::endl;
+    if (obstacle_found) {                         // check what we remembered across the whole loop
+        std::cout << "ACTION: STOP" << std::endl; // if ANY sensor found danger, stop the robot
     } else {
-        std::cout << "Sensor" << i << ": Clear - No Obstacle" << sensor_readings[i] << "cm" << std::endl;
+        std::cout << "ACTION: PROCEED" << std::endl;  // only reached if ALL sensors were clear
     }
+
+    return 0;                                     // program finished successfully
 }
 
-// Part C — the new bit: track if any sensor found danger, using a bool:
-
-bool obstacle_found = false;
-// inside the if(danger) block, add:
-obstacle_found = true;
+// g++ Project1_OAS.cpp -o Project1_OAS.exe; .\Project1_OAS.exe
