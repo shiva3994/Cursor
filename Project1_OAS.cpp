@@ -22,3 +22,9 @@ for (int i = 0; i < 5; i++) {
     }
 }
 
+// Part C — the new bit: track if any sensor found danger, using a bool:
+
+bool obstacle_found = false;
+
+// inside the if(danger) block, add:
+obstacle_found = true;
