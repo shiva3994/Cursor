@@ -19,3 +19,13 @@ int main() {                                            // program starts here
         if (danger) {                                   // if THIS sensor returned true (danger)...
             obstacle_found = true;                      // ...remember that overall danger was found
         }
+        }                                                    // loop ends after checking all 5
+
+        if (obstacle_found) {                               // check what we remembered across the whole loop
+            std::cout << "ACTION: STOP" << std::endl;       // if ANY sensor found danger, stop
+        } else {
+            std::cout << "ACTION: PROCEED" << std::endl;    // only reached if ALL sensors were clear
+        }
+    
+        return 0;                                           // program finished successfully
+    }
