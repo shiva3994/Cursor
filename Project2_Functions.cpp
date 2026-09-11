@@ -30,4 +30,4 @@ int main() {                                            // program starts here
         return 0;                                           // program finished successfully
     }
 
-    g++ Project2_Functions.cpp -o Project2_Functions.exe; .\Project2_Functions.exe
+// g++ Project2_Functions.cpp -o Project2_Functions.exe; .\Project2_Functions.exe
