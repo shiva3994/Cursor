@@ -1,6 +1,8 @@
 #include <iostream>                          // gives access to std::cout for printing
 
-void check_sensor(int distance) {            // defines a function named check_sensor, takes one int parameter, returns nothing (void)
+void check_sensor(int distance) {            // defines a function named check_sensor, 
+                                             // takes one int parameter, returns nothing (void)
+
     if (distance < 10) {                     // check if the distance is under 10cm
         std::cout << "DANGER" << std::endl;  // print DANGER if too close
     } else {                                 // otherwise (10 or more)
