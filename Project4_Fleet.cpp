@@ -16,10 +16,27 @@ void reportStatus(Robot r) {                  // function takes a whole Robot as
 int main() {                                  // program starts here
     Robot fleet[3];                           // array holding 3 Robots
 
-    // TODO: set fleet[0].name, fleet[0].battery_level, fleet[0].position (and same for [1], [2])
+    fleet[0].name = 'Rover0';
+    fleet[0].battery_level = 10;
+    fleet[0].position = 0;
+
+    fleet[1].name = 'Rover1';
+    fleet[1].battery_level = 90;
+    fleet[1].position = 0;
+
+    fleet[2].name = 'Rover2';
+    fleet[2].battery_level = 88;
+    fleet[2].position = 0;
+
+    std::cout << fleet[0].name << ": " << fleet[0].battery_level << "%" << std::endl;  // print 1st robot
+    std::cout << fleet[1].name << ": " << fleet[1].battery_level << "%" << std::endl;  // print 2nd robot
+    std::cout << fleet[2].name << ": " << fleet[2].battery_level << "%" << std::endl;  // print 3rd robot
 
     // TODO: use a for loop (i = 0 to 2) to call reportStatus(fleet[i])
     //       and print a warning if fleet[i].battery_level < 30
 
     return 0;                                 // program finished successfully
 }
+
+
+//  g++ Project4_Fleet.cpp -o Project4_Fleet.exe; .\Project4_Fleet.exe
