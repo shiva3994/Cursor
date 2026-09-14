@@ -1,4 +1,4 @@
-// it's just meant to hold the standalone concept, not a runnable program
+// This file is just meant to hold the standalone concept, not a runnable program
 
 #include <iostream>              // for std::cout
 #include <string>                // needed to use std::string
