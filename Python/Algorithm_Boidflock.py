@@ -1,5 +1,3 @@
-import pygame
-
 """
 Boids flocking simulation (Craig Reynolds, 1986)
 
@@ -35,6 +33,7 @@ BG_COLOR = (8, 8, 12)
 PANEL_COLOR = (14, 14, 20)
 FISH_COLOR = (235, 235, 240)
 SHARK_COLOR = (255, 60, 120)
+INFECTED_COLOR = SHARK_COLOR      # infected fish match the shark's color
 ACCENT = (255, 60, 120)
 TEXT_COLOR = (150, 150, 160)
 
@@ -43,6 +42,7 @@ MIN_SPEED = 1.5
 PERCEPTION = 55       # how far a fish can "see" its neighbors
 SEPARATION_DIST = 22  # personal space before separation kicks in
 SHARK_FLEE_RADIUS = 150
+SHARK_TOUCH_DIST = 18  # how close the shark must get to actually "infect" a fish
 SHARK_SPEED = 5.5
 
 FPS = 30
@@ -56,6 +56,7 @@ class Boid:
         angle = random.uniform(0, 2 * math.pi)
         speed = random.uniform(MIN_SPEED, MAX_SPEED)
         self.vel = pygame.Vector2(math.cos(angle), math.sin(angle)) * speed
+        self.infected = False  # turns True once a shark touches this fish
 
     def flock(self, boids, shark_pos, sep_w, align_w, coh_w):
         separation = pygame.Vector2()
@@ -118,30 +119,56 @@ class Boid:
         tip = self.pos + pygame.Vector2(math.cos(angle), math.sin(angle)) * size
         left = self.pos + pygame.Vector2(math.cos(angle + 2.6), math.sin(angle + 2.6)) * size * 0.7
         right = self.pos + pygame.Vector2(math.cos(angle - 2.6), math.sin(angle - 2.6)) * size * 0.7
-        pygame.draw.polygon(screen, FISH_COLOR, [tip, left, right])
+        color = INFECTED_COLOR if self.infected else FISH_COLOR
+        pygame.draw.polygon(screen, color, [tip, left, right])
 
 
 # --------------------------------------------------------------- the shark
+SHARK_LIFESPAN = FPS * 10   # frames before the shark gives up and leaves
+SHARK_TURN_RATE = 0.10      # how quickly it can change direction while hunting
+
+
 class Shark:
-    """A predator that swims toward a target point, then fades away."""
+    """A predator that actively hunts the nearest fish, then swims off."""
 
-    def __init__(self, target):
-        self.pos = pygame.Vector2(target)
-        self.pos.x = -40 if target[0] > WIDTH / 2 else WIDTH + 40
-        self.pos.y = target[1]
-        self.target = pygame.Vector2(target)
+    def __init__(self, entry_point):
+        self.pos = pygame.Vector2(entry_point)
+        self.pos.x = -40 if entry_point[0] > WIDTH / 2 else WIDTH + 40
+        self.vel = pygame.Vector2(1 if self.pos.x < 0 else -1, 0) * SHARK_SPEED
         self.alive = True
+        self.age = 0
+        self.leaving = False
 
-    def update(self):
-        offset = self.target - self.pos
-        dist = offset.length()
-        if dist < 10:
+    def update(self, boids):
+        self.age += 1
+
+        if not self.leaving and self.age > SHARK_LIFESPAN:
+            self.leaving = True
+
+        if self.leaving:
+            # swim off in whatever direction it was already heading
+            desired = self.vel.normalize() if self.vel.length() > 0 else pygame.Vector2(1, 0)
+        elif boids:
+            # find the nearest fish and chase it -- recomputed every frame,
+            # so the shark tracks the school as it scatters and regroups
+            nearest = min(boids, key=lambda b: self.pos.distance_squared_to(b.pos))
+            offset = nearest.pos - self.pos
+            desired = offset.normalize() if offset.length() > 0 else self.vel
+        else:
+            desired = self.vel.normalize() if self.vel.length() > 0 else pygame.Vector2(1, 0)
+
+        # steer smoothly toward the desired direction instead of snapping to it,
+        # so the shark's turns look natural rather than teleporting its heading
+        self.vel = self.vel.lerp(desired * SHARK_SPEED, SHARK_TURN_RATE)
+        if self.vel.length() > 0:
+            self.vel.scale_to_length(SHARK_SPEED)
+        self.pos += self.vel
+
+        if self.pos.x < -60 or self.pos.x > WIDTH + 60:
             self.alive = False
-            return
-        self.pos += offset.normalize() * min(SHARK_SPEED, dist)
 
     def draw(self, screen):
-        angle = math.atan2(self.target.y - self.pos.y, self.target.x - self.pos.x)
+        angle = math.atan2(self.vel.y, self.vel.x) if self.vel.length() > 0 else 0
         size = 16
         tip = self.pos + pygame.Vector2(math.cos(angle), math.sin(angle)) * size
         left = self.pos + pygame.Vector2(math.cos(angle + 2.6), math.sin(angle + 2.6)) * size * 0.8
@@ -287,8 +314,14 @@ def main():
             b.move()
 
         for s in sharks:
-            s.update()
+            s.update(boids)
         sharks = [s for s in sharks if s.alive]
+
+        # any fish close enough to a shark gets marked infected
+        for s in sharks:
+            for b in boids:
+                if b.pos.distance_to(s.pos) < SHARK_TOUCH_DIST:
+                    b.infected = True
 
         # ---- draw ----
         screen.fill(BG_COLOR)
