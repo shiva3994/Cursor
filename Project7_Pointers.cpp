@@ -21,3 +21,5 @@ int main() {                                            // program starts here
 
     return 0;                                           // program finished successfully
 }
+
+// g++ Project7_Pointers.cpp -o Project7_Pointers.exe; .\Project7_Pointers.exe
