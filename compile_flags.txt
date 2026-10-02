@@ -1,1 +1,2 @@
 --driver-mode=g++
+--query-driver=C:\msys64\**\g++.exe
